@@ -1,0 +1,23 @@
+Account relation:
+Username(PK)
+Password
+Role
+FullName
+Total Amount
+
+Product relation:
+Id(PK)
+Name
+Price
+Description
+
+Cart relation:
+Username(FK)
+ProductId(FK)
+Quantity
+
+Role admin: can create, update product
+role user: Add to cart -> payment, automatically clear cart with confirmation, add to total amount in account
+Using Repository pattern and JWT authentication
+
+
