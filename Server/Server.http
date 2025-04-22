@@ -1,6 +1,6 @@
-@Day6_HostAddress = http://localhost:5292
+@Server_HostAddress = http://localhost:5292
 
-GET {{Day6_HostAddress}}/weatherforecast/
+GET {{Server_HostAddress}}/weatherforecast/
 Accept: application/json
 
 ###
