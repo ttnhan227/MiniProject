@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Server.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Server.Repository
 {
@@ -76,8 +77,12 @@ namespace Server.Repository
            _context.SaveChanges();
         }
 
-       
-        
-       
+        public async Task<List<Product>> Search(string searchTerm)
+        {
+            var searchTermLower = searchTerm.ToLower();
+            return await _context.Products
+                .Where(p => EF.Functions.Like(p.Name.ToLower(), $"%{searchTermLower}%") || EF.Functions.Like(p.Description.ToLower(), $"%{searchTermLower}%"))
+                .ToListAsync();
+        }
     }
 }

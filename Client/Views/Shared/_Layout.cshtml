@@ -24,17 +24,36 @@
                     ThuyetTrinhNhom5.com
                 </a>
                 <!-- Search Bar -->
-                <form class="d-flex flex-fill mx-3" asp-controller="Product" asp-action="Index" method="get">
+                <form class="d-flex flex-fill mx-3" asp-controller="Home" asp-action="Search" method="get">
                     <input class="form-control" name="search" type="search" placeholder="Bạn tìm gì..." aria-label="Search">
                     <button class="btn btn-light ms-2" type="submit"><i class="bi bi-search"></i></button>
                 </form>
                 <!-- User Actions -->
                 <ul class="navbar-nav mb-2 mb-lg-0 d-flex align-items-center">
-                    <li class="nav-item me-3">
-                        <a class="nav-link text-dark" asp-controller="Account" asp-action="Login">
-                            <i class="bi bi-person"></i> Đăng nhập
-                        </a>
-                    </li>
+                     @if (!Context.Request.Cookies.ContainsKey("token"))
+                    {
+                        <li class="nav-item me-3">
+                            <a class="nav-link text-dark" asp-controller="Account" asp-action="Index">
+                                <i class="bi bi-person"></i> Đăng nhập
+                            </a>
+                        </li>
+                    }
+                    else
+                    {
+                        <li class="nav-item me-3">
+                            <a class="nav-link text-dark" asp-controller="Account" asp-action="Logout">
+                                <i class="bi bi-person"></i> Đăng xuất
+                            </a>
+                        </li>
+                        @if (User.IsInRole("admin"))
+                        {
+                            <li class="nav-item me-3">
+                                <a class="nav-link text-dark" asp-controller="Product" asp-action="Index">
+                                    <i class="bi bi-gear"></i> Quản lý sản phẩm
+                                </a>
+                            </li>
+                        }
+                    }
                     <li class="nav-item me-3">
                         <a class="nav-link text-dark" asp-controller="Cart" asp-action="Index">
                             <i class="bi bi-cart-fill"></i> Giỏ hàng

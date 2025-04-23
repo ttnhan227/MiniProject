@@ -8,6 +8,6 @@ public class Product
     public string? Description { get; set; }
      public virtual ICollection<Cart>? Carts { get; set; }
 
-    public string ImageUrl { get; set; }//
+    //public string ImageUrl { get; set; }//
 
 }

@@ -56,7 +56,12 @@ namespace Server.Controllers
             return NoContent();
         }
 
-        
+        [HttpGet("Search")]
+        [AllowAnonymous]
+        public async Task<IActionResult> SearchProducts(string searchTerm)
+        {
+            var products = await _productRepository.Search(searchTerm);
+            return Ok(products);
+        }
     }
-
 }
