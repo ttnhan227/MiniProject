@@ -11,7 +11,7 @@ using Server.Models;
 namespace Server.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20250422013100_Initial")]
+    [Migration("20250423034649_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
