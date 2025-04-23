@@ -14,45 +14,155 @@ namespace Client.Controllers
 
         public IActionResult Index()
         {
-            var token = HttpContext.Session.GetString("token");
-            var handler = new JwtSecurityTokenHandler();
-            var jwtToken = handler.ReadJwtToken(token);
-            var username = jwtToken.Claims.FirstOrDefault(c => c.Type == "Username")?.Value;
+            // Read token from cookies
+            if (!HttpContext.Request.Cookies.TryGetValue("token", out string token) || string.IsNullOrEmpty(token))
+            {
+                return Unauthorized("Token is missing or invalid.");
+            }
 
+            try
+            {
+                var handler = new JwtSecurityTokenHandler();
+                var jwtToken = handler.ReadJwtToken(token);
+                var username = jwtToken.Claims.FirstOrDefault(c => c.Type == "Username")?.Value;
 
-            var result = client.GetStringAsync(uri + username).Result;
-            var list = JsonConvert.DeserializeObject<IEnumerable<Cart>>(result);
-            return View(list);
+                if (string.IsNullOrEmpty(username))
+                {
+                    return BadRequest("Username claim is missing in the token.");
+                }
+
+                // Add token to request header
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+                // Correct API endpoint
+                HttpResponseMessage response = client.GetAsync(uri + "GetCart/" + username).Result;
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var result = response.Content.ReadAsStringAsync().Result;
+                    var list = JsonConvert.DeserializeObject<IEnumerable<Cart>>(result);
+                    return View(list);
+                }
+                else if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+                {
+                    // Handle the case where the cart is not found (404)
+                    return View(new List<Cart>()); // Pass an empty list to the view
+                }
+                else
+                {
+                    return StatusCode((int)response.StatusCode, $"An error occurred: {response.ReasonPhrase}");
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"An error occurred: {ex.Message}");
+            }
         }
 
         public IActionResult AddCart(int id)
         {
-            var token = HttpContext.Session.GetString("token");
-            var handler = new JwtSecurityTokenHandler();
-            var jwtToken = handler.ReadJwtToken(token);
-            var username = jwtToken.Claims.FirstOrDefault(c => c.Type == "Username")?.Value;
-
-            Cart cart = new Cart
+            // Read token from cookies
+            if (!HttpContext.Request.Cookies.TryGetValue("token", out string token) || string.IsNullOrEmpty(token))
             {
-                ProductId = id,
-                Quantity = 1,
-                UserName = username
-            };
+                return Unauthorized("Token is missing or invalid.");
+            }
 
-            var result = client.PostAsJsonAsync(uri, cart).Result;
-            return RedirectToAction("Index");
+            try
+            {
+                var handler = new JwtSecurityTokenHandler();
+                var jwtToken = handler.ReadJwtToken(token);
+                var username = jwtToken.Claims.FirstOrDefault(c => c.Type == "Username")?.Value;
+
+                if (string.IsNullOrEmpty(username))
+                {
+                    return BadRequest("Username claim is missing in the token.");
+                }
+
+                Cart cart = new Cart
+                {
+                    ProductId = id,
+                    Quantity = 1,
+                    UserName = username
+                };
+
+                // Add token to request header
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+                // Correct API endpoint
+                var result = client.PostAsJsonAsync(uri + "AddToCart", cart).Result;
+                return RedirectToAction("Index");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"An error occurred: {ex.Message}");
+            }
         }
 
-        public IActionResult Payment()
+        // Make the action async
+        public async Task<IActionResult> Payment() 
         {
-            var token = HttpContext.Session.GetString("token");
-            var handler = new JwtSecurityTokenHandler();
-            var jwtToken = handler.ReadJwtToken(token);
-            var username = jwtToken.Claims.FirstOrDefault(c => c.Type == "Username")?.Value;
+            // Read token from cookies
+            if (!HttpContext.Request.Cookies.TryGetValue("token", out string token) || string.IsNullOrEmpty(token))
+            {
+                return Unauthorized("Token is missing or invalid.");
+            }
 
-            var result = client.GetStreamAsync(uri + "payment/" + username).Result;
-            return RedirectToAction("Index");
+            try
+            {
+                var handler = new JwtSecurityTokenHandler();
+                var jwtToken = handler.ReadJwtToken(token);
+                var username = jwtToken.Claims.FirstOrDefault(c => c.Type == "Username")?.Value;
 
+                if (string.IsNullOrEmpty(username))
+                {
+                    return BadRequest("Username claim is missing in the token.");
+                }
+
+                // Add token to request header
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+                // Correct API endpoint and HTTP method (POST instead of GET)
+                // Use await and check the response
+                var result = await client.PostAsync(uri + "Payment/" + username, null);
+
+                if (result.IsSuccessStatusCode)
+                {
+                    // Fetch cart items
+                    HttpResponseMessage cartResponse = await client.GetAsync(uri + "GetCart/" + username);
+                    if (cartResponse.IsSuccessStatusCode)
+                    {
+                        var cartResult = await cartResponse.Content.ReadAsStringAsync();
+                        var cartItems = JsonConvert.DeserializeObject<IEnumerable<Cart>>(cartResult);
+
+                        // Calculate total amount
+                        decimal totalAmount = 0;
+                        foreach (var item in cartItems)
+                        {
+                            totalAmount += item.Quantity * 10; // Assuming each product has a fixed price for simplicity
+                        }
+
+                        // Simulate balance update
+                        decimal currentBalance = 100; // Placeholder balance
+                        decimal newBalance = currentBalance - totalAmount;
+
+                        // Update success message
+                        TempData["SuccessMessage"] = $"Total amount: {totalAmount}, your new balance: {newBalance}";
+                    }
+                    else
+                    {
+                        TempData["SuccessMessage"] = "Payment processed successfully! Your cart has been cleared.";
+                    }
+                }
+                else
+                {
+                    TempData["ErrorMessage"] = $"Payment failed. Status code: {result.StatusCode}";
+                }
+                return RedirectToAction("Index", "Home");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"An error occurred: {ex.Message}");
+            }
         }
     }
 }

@@ -13,14 +13,16 @@
   <component name="ChangeListManager">
     <list default="true" id="9a37550a-1cf6-4b6f-b494-f721042e2489" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.MiniProject/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.MiniProject/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Client/Controllers/CartController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Client/Controllers/CartController.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Client/Controllers/ProductController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Client/Controllers/ProductController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Client/Models/Product.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Client/Models/Product.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Client/Views/Product/Index.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/Client/Views/Product/Index.cshtml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server/Controllers/ProductController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Server/Controllers/ProductController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Client/Models/Cart.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Client/Models/Cart.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Client/Views/Cart/AddCart.cshtml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Client/Views/Cart/Index.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/Client/Views/Cart/Index.cshtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Client/Views/Shared/_Layout.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/Client/Views/Shared/_Layout.cshtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Server/Models/Cart.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Server/Models/Cart.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Server/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Server/Program.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Server/Repository/CartRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Server/Repository/CartRepository.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Server/Repository/ICartRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Server/Repository/ICartRepository.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server/Repository/IProductRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Server/Repository/IProductRepository.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server/Repository/ProductRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Server/Repository/ProductRepository.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -198,7 +200,7 @@
       <workItem from="1745313599662" duration="2131000" />
       <workItem from="1745316306705" duration="4972000" />
       <workItem from="1745371018530" duration="399000" />
-      <workItem from="1745372116036" duration="2927000" />
+      <workItem from="1745372116036" duration="6335000" />
     </task>
     <servers />
   </component>

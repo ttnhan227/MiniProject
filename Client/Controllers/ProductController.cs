@@ -1,4 +1,4 @@
-﻿﻿﻿﻿﻿﻿﻿﻿using Client.Models;
+﻿﻿﻿﻿﻿﻿﻿﻿﻿using Client.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -23,6 +23,7 @@ namespace Client.Controllers
         [HttpGet]
         public IActionResult Index()
         {
+            AddHeader(); // Add this line
             var result = client.GetStringAsync(uri).Result;
             var list = JsonConvert.DeserializeObject<IEnumerable<Product>>(result);
             return View("Index", list);

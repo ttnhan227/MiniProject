@@ -12,13 +12,18 @@ public class CartRepository : ICartRepository
         _context = context;
     }
 
-    public async Task <IEnumerable<Cart>> GetByUser(string username)
+    public async Task<IEnumerable<Cart>> GetByUser(string username)
     {
-        return  _context.Carts
+        return await _context.Carts
             .Include(c => c.Product)
             .Where(c => c.UserName == username)
-            .ToList();
-        
+            .Select(c => new Cart
+            {
+                UserName = c.UserName,
+                ProductId = c.ProductId,
+                Quantity = c.Quantity,
+            })
+            .ToListAsync();
     }
 
     public async Task<Cart> AddToCart(Cart cart)
