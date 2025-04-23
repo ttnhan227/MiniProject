@@ -77,6 +77,15 @@ public class CartRepository : ICartRepository
         ;
     }
    
+    public async Task RemoveProductFromAllCarts(int productId)
+    {
+    
+        // Example using Entity Framework Core:
+        var cartItems = await _context.Carts
+            .Where(c => c.ProductId == productId)
+            .ToListAsync();
 
-
+        _context.Carts.RemoveRange(cartItems);
+        await _context.SaveChangesAsync();
+    }
 }

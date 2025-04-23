@@ -7,4 +7,5 @@ public interface IProductRepository
     Task Add(Product product);
     Task Update(Product product);
     Task<List<Product>> Search(string searchTerm);
+    Task Delete(int id);
 }

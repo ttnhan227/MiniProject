@@ -1,4 +1,4 @@
-﻿using Client.Models;
+﻿﻿﻿﻿﻿﻿﻿﻿using Client.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -9,10 +9,10 @@ namespace Client.Controllers
 
     public class ProductController : Controller
     {
-        private string uri = "https://localhost:7283/api/Product/";
+        private string uri = "https://localhost:7283/api/Product";
         private HttpClient client = new HttpClient();
 
-[NonAction]
+        [NonAction]
         private void AddHeader()
         {
             if (HttpContext.Request.Cookies.TryGetValue("token", out string token))
@@ -20,18 +20,25 @@ namespace Client.Controllers
                 client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
             }
         }
+        [HttpGet]
+        public IActionResult Index()
+        {
+            var result = client.GetStringAsync(uri).Result;
+            var list = JsonConvert.DeserializeObject<IEnumerable<Product>>(result);
+            return View("Index", list);
+        }
 
-        //public IActionResult Index()
-        //{
-        //    var result = client.GetStringAsync(uri).Result;
-        //    var list = JsonConvert.DeserializeObject<IEnumerable<Product>>(result);
-        //    return View(list);
-        //}
+        public IActionResult Create()
+        {
+            return View();
+        }
 
-        //public IActionResult Create()
-        //{
-        //    return View();
-        //}
+        public IActionResult Edit(int id)
+        {
+            var result = client.GetStringAsync(uri + "/" + id).Result;
+            var product = JsonConvert.DeserializeObject<Product>(result);
+            return View(product);
+        }
 
         [HttpPost]
         public IActionResult Create(Product product)
@@ -56,32 +63,54 @@ namespace Client.Controllers
                     return Redirect("/Account/Index");
                 }
             }
+            else
+            {
+            }
+
             return View();
         }
 
-        [HttpGet]
-        public IActionResult Index(string search)
+        [HttpPost]
+        public IActionResult Edit(Product product)
         {
-            AddHeader();
-            string url = uri;
-            if (!string.IsNullOrEmpty(search))
+            if (ModelState.IsValid)
             {
-                url = uri + "Search?searchTerm=" + search;
-            }
-            try
-            {
-                var result = client.GetStringAsync(url).Result;
-                var list = JsonConvert.DeserializeObject<IEnumerable<Product>>(result);
-                return View(list);
-            }
-            catch (Exception ex)
-            {
-                if (ex.Message.Contains("403"))
+                AddHeader();
+                var result = client.PutAsJsonAsync(uri + "/" + product.Id, product).Result;
+                if (result.IsSuccessStatusCode)
                 {
-                    TempData["error"] = "Access denied. Admin role required.";
+                    return RedirectToAction("Index");
+                }
+                else if (result.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+                {
+                    //chua dang nhap
                     return Redirect("/Account/Index");
                 }
-                throw;
+                else if (result.StatusCode == System.Net.HttpStatusCode.Forbidden)
+                {
+                    //sai role
+                    TempData["error"] = "Vui long login role admin de thuc hien!";
+                    return Redirect("/Account/Index");
+                }
+            }
+            else
+            {
+            }
+
+            return View();
+        }
+
+        public IActionResult Delete(int id)
+        {
+            AddHeader();
+            var result = client.DeleteAsync(uri + "/" + id).Result;
+            if (result.IsSuccessStatusCode)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+            else
+            {
+                return RedirectToAction(nameof(Index));
             }
         }
     }

@@ -10,10 +10,12 @@ namespace Server.Controllers
     public class ProductController : ControllerBase
     {
         private readonly IProductRepository _productRepository;
+        private readonly ICartRepository _cartRepository;
 
-        public ProductController(IProductRepository productRepository)
+        public ProductController(IProductRepository productRepository, ICartRepository cartRepository)
         {
             _productRepository = productRepository;
+            _cartRepository = cartRepository;
         }
 
         [HttpGet]
@@ -62,6 +64,19 @@ namespace Server.Controllers
         {
             var products = await _productRepository.Search(searchTerm);
             return Ok(products);
+        }
+
+        [HttpDelete("{id}")]
+        [Authorize(Roles = "admin")]
+        public async Task<IActionResult> DeleteProduct(int id)
+        {
+            // Remove product from all carts
+            await _cartRepository.RemoveProductFromAllCarts(id);
+
+            // Delete the product
+            await _productRepository.Delete(id);
+
+            return NoContent();
         }
     }
 }

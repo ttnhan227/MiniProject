@@ -84,5 +84,15 @@ namespace Server.Repository
                 .Where(p => EF.Functions.Like(p.Name.ToLower(), $"%{searchTermLower}%") || EF.Functions.Like(p.Description.ToLower(), $"%{searchTermLower}%"))
                 .ToListAsync();
         }
+
+        public async Task Delete(int id)
+        {
+            var product = await _context.Products.FindAsync(id);
+            if (product != null)
+            {
+                _context.Products.Remove(product);
+                await _context.SaveChangesAsync();
+            }
+        }
     }
 }
