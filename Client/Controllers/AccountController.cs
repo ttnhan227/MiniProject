@@ -9,7 +9,7 @@ namespace Client.Controllers
 {
     public class AccountController : Controller
     {
-        private string uri = "https://localhost:7283/api/Account";
+        private string uri = "https://localhost:7288/api/Account";
         private HttpClient client = new HttpClient();
 
         public IActionResult Index()
@@ -67,8 +67,8 @@ namespace Client.Controllers
 
         public async Task<IActionResult> Logout()
         {
-            await HttpContext.SignOutAsync("Cookies");
-            HttpContext.Response.Cookies.Delete("token");
+            await HttpContext.SignOutAsync("Cookies");    // Xóa ClaimsPrincipal
+            HttpContext.Response.Cookies.Delete("token"); // Xóa token lưu trong cookie
             return RedirectToAction("Index");
         }
 

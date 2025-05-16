@@ -9,7 +9,7 @@ namespace Client.Controllers
 {
     public class CartController : Controller
     {
-        private string uri = "https://localhost:7283/api/Cart/";
+        private string uri = "https://localhost:7288/api/Cart/";
         private HttpClient client = new HttpClient();
 
         public IActionResult Index()

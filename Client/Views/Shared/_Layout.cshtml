@@ -9,76 +9,87 @@
     <link rel="stylesheet" href="~/Client.styles.css" asp-append-version="true" />
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
+    <style>
+        html, body {
+            height: 100%;
+        }
+    </style>
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-lg bg-warning navbar-light py-2">
-            <div class="container-fluid">
-                <!-- Views/Shared/_Layout.cshtml -->
-                <a class="navbar-brand d-flex align-items-center" asp-controller="Home" asp-action="Index">
-                    <!-- src="~/images/logo.png" sẽ trỏ đến wwwroot/images/logo.png -->
-                    <img src="~/images/Logo.jpg"
-                         alt="Logo"
-                         height="30"
-                         class="me-2" />
-                    ThuyetTrinhNhom5.com
-                </a>
-                <!-- Search Bar -->
-                <form class="d-flex flex-fill mx-3" asp-controller="Home" asp-action="Search" method="get">
-                    <input class="form-control" name="search" type="search" placeholder="Bạn tìm gì..." aria-label="Search">
-                    <button class="btn btn-light ms-2" type="submit"><i class="bi bi-search"></i></button>
-                </form>
-                <!-- User Actions -->
-                <ul class="navbar-nav mb-2 mb-lg-0 d-flex align-items-center">
-                     @if (!Context.Request.Cookies.ContainsKey("token"))
-                    {
-                        <li class="nav-item me-3">
-                            <a class="nav-link text-dark" asp-controller="Account" asp-action="Index">
-                                <i class="bi bi-person"></i> Đăng nhập
-                            </a>
-                        </li>
-                    }
-                    else
-                    {
-                        <li class="nav-item me-3">
-                            <a class="nav-link text-dark" asp-controller="Account" asp-action="Logout">
-                                <i class="bi bi-person"></i> Đăng xuất
-                            </a>
-                        </li>
-                        @if (User.IsInRole("admin"))
+    <div class="d-flex flex-column min-vh-100">
+        <header>
+            <nav class="navbar navbar-expand-lg bg-warning navbar-light py-2">
+                <div class="container-fluid">
+                    <!-- Views/Shared/_Layout.cshtml -->
+                    <a class="navbar-brand d-flex align-items-center" asp-controller="Home" asp-action="Index">
+                        <!-- src="~/images/logo.png" sẽ trỏ đến wwwroot/images/logo.png -->
+                        <img src="~/images/Logo.jpg"
+                             alt="Logo"
+                             height="30"
+                             class="me-2" />
+                        ThuyetTrinhNhom5.com
+                    </a>
+                    <!-- Search Bar -->
+                    <form class="d-flex flex-fill mx-3" asp-controller="Home" asp-action="Search" method="get">
+                        <input class="form-control" name="search" type="search" placeholder="Bạn tìm gì..." aria-label="Search">
+                        <button class="btn btn-light ms-2" type="submit"><i class="bi bi-search"></i></button>
+                    </form>
+                    <!-- User Actions -->
+                    <ul class="navbar-nav mb-2 mb-lg-0 d-flex align-items-center">
+                        @if (!Context.Request.Cookies.ContainsKey("token"))
                         {
                             <li class="nav-item me-3">
-                                <a class="nav-link text-dark" asp-controller="Product" asp-action="Index">
-                                    <i class="bi bi-gear"></i> Quản lý sản phẩm
+                                <a class="nav-link text-dark" asp-controller="Account" asp-action="Index">
+                                    <i class="bi bi-person"></i> Đăng nhập
                                 </a>
                             </li>
                         }
-                    }
-                    <li class="nav-item me-3">
-                        <a class="nav-link text-dark" asp-controller="Cart" asp-action="Index">
-                            <i class="bi bi-cart-fill"></i> Giỏ hàng
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <span class="nav-link text-dark"><i class="bi bi-geo-alt"></i> Hồ Chí Minh</span>
-                    </li>
-                </ul>
-                <!-- Toggler for mobile -->
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
+                        else
+                        {
+                            <li class="nav-item me-3">
+                                <a class="nav-link text-dark" asp-controller="Account" asp-action="Logout">
+                                    <i class="bi bi-person"></i> Đăng Xuất
+                                </a>
+                            </li>
+                            @if (User.IsInRole("admin"))
+                            {
+                                <li class="nav-item me-3">
+                                    <a class="nav-link text-dark" asp-controller="Product" asp-action="Index">
+                                        <i class="bi bi-gear"></i> Quản lý sản phẩm
+                                    </a>
+                                </li>
+                            }
+                        }
+                        <li class="nav-item me-3">
+                            <a class="nav-link text-dark" asp-controller="Cart" asp-action="Index">
+                                <i class="bi bi-cart-fill"></i> Giỏ hàng
+                            </a>
+                        </li>
+                        @* <li class="nav-item"> *@
+                        @*     <span class="nav-link text-dark"><i class="bi bi-geo-alt"></i> Hồ Chí Minh</span> *@
+                        @* </li> *@
+                    </ul>
+                    <!-- Toggler for mobile -->
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                            aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                </div>
+            </nav>
+        </header>
+
+        <!-- ✅ Phần nội dung chính, dùng flex-fill để chiếm hết phần trống -->
+        <main class="flex-fill">
+            <div class="container-fluid p-0">
+                @RenderBody()
             </div>
-        </nav>
-    </header>
+        </main>
 
-    <div class="container-fluid p-0">
-        @RenderBody()
+        <!-- ✅ Footer  -->
+        <footer class="bg-light text-center text-muted py-3 mt-4">
+            Group 5 Demo
+        </footer>
     </div>
-
-    <footer class="bg-light text-center text-muted py-3 mt-4">
-        &copy; 2025 ShopDemo
-    </footer>
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>

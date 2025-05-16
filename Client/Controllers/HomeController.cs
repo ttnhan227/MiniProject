@@ -8,7 +8,7 @@ namespace Client.Controllers;
 public class HomeController : Controller
 {
     private readonly ILogger<HomeController> _logger;
-    private readonly string uri = "https://localhost:7283/api/Product"; //
+    private readonly string uri = "https://localhost:7288/api/Product"; //
     private HttpClient client = new HttpClient();//
 
     public HomeController(ILogger<HomeController> logger)
@@ -32,7 +32,7 @@ public class HomeController : Controller
 
 public IActionResult Search(string search)
     {
-        string url = "https://localhost:7283/api/Product/Search?searchTerm=" + Uri.EscapeDataString(search);
+        string url = "https://localhost:7288/api/Product/Search?searchTerm=" + Uri.EscapeDataString(search);
         var result = client.GetStringAsync(url).Result;
         var list = JsonConvert.DeserializeObject<IEnumerable<Product>>(result);
         return View("Index", list);

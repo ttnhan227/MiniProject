@@ -9,10 +9,10 @@ namespace Client.Controllers
 
     public class ProductController : Controller
     {
-        private string uri = "https://localhost:7283/api/Product/";
+        private string uri = "https://localhost:7288/api/Product/";
         private HttpClient client = new HttpClient();
 
-[NonAction]
+        [NonAction]
         private void AddHeader()
         {
             if (HttpContext.Request.Cookies.TryGetValue("token", out string token))

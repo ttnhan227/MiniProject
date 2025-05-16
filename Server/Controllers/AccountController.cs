@@ -36,9 +36,6 @@ namespace Server.Controllers
             }
             return NotFound("User not found");
         }
-
-
-      
     }
-    }
+}
 
